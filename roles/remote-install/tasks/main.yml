@@ -1,0 +1,41 @@
+---
+  
+- name: Creating .ssh directory for edxapp
+  file: 
+    path: "/edx/app/edxapp/.ssh"
+    state: directory 
+    owner: "edxapp" 
+    group: "www-data"
+    recurse: yes
+  become_method: sudo
+  become: yes
+  become_user: "root"
+
+- name: Deploying git SSH private key for edxapp
+  copy:
+    content: "{{ git_key }}"
+    dest: "/edx/app/edxapp/.ssh/id_rsa"
+    owner: "edxapp"
+    group: "edxapp" 
+    mode: 0600
+    force: yes
+  become_method: sudo
+  become: yes
+  become_user: "root"
+
+- name: Deploying themex script
+  git: 
+    repo: "https://github.com/raccoongang/themex_script.git" 
+    dest: "{{ home_dir }}/themex_script"
+    ssh_opts: "-o StrictHostKeyChecking=no"
+    force: yes
+
+- lineinfile:
+    dest: "{{ home_dir }}/themex_script/update_theme.sh" 
+    regexp: 'ansible-playbook -c local -i "localhost," prepare.yml'  
+    line: '/edx/app/edx_ansible/venvs/edx_ansible/bin/ansible-playbook -c local -i "localhost," prepare.yml'
+
+- name: Installing theme from "{{ script_repo }}"
+  command: "bash update_theme.sh master {{ script_repo }}"
+  args:
+    chdir: "{{ home_dir }}/themex_script"

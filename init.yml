@@ -1,0 +1,7 @@
+---
+
+- hosts: "{{ edx_host }}"
+  remote_user: ubuntu
+
+  roles:
+  - { role: remote-install }

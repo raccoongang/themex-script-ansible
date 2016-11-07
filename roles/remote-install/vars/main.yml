@@ -1,0 +1,9 @@
+---
+
+system_user: "ubuntu"
+script_repo: "git@bitbucket.org:egaritas/egaritas-theme.git"
+home_dir: "/home/{{ system_user }}"
+git_key: |
+    -----BEGIN RSA PRIVATE KEY-----
+
+    -----END RSA PRIVATE KEY-----
