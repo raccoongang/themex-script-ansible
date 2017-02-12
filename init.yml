@@ -1,6 +1,6 @@
 ---
 
-- hosts: "{{ edx_host }}"
+- hosts: "{{ edx_hosts | default('localhost') }}"
   remote_user: ubuntu
 
   roles:
